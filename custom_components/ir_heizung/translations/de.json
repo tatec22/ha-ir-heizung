@@ -1,0 +1,164 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "IR-Heizung einrichten",
+        "description": "Ein Thermostat für eine oder mehrere schaltbare Heizungen in einem Raum. Alles Weitere (Temperaturen, PV-Boost, Saison, Regler) stellst du danach unter „Konfigurieren“ ein.",
+        "data": {
+          "name": "Name",
+          "heaters": "Heizungen (Schalter)",
+          "temperature_sensor": "Raumtemperatur-Sensor"
+        },
+        "data_description": {
+          "heaters": "Alle gewählten Schalter werden gemeinsam getaktet.",
+          "temperature_sensor": "Nicht in den Strahlungsbereich der Infrarot-Panels und nicht in die Sonne stellen."
+        }
+      },
+      "reconfigure": {
+        "title": "Heizungen und Sensor ändern",
+        "data": {
+          "heaters": "Heizungen (Schalter)",
+          "temperature_sensor": "Raumtemperatur-Sensor"
+        }
+      }
+    },
+    "error": {
+      "no_heaters": "Mindestens eine Heizung auswählen."
+    },
+    "abort": {
+      "already_configured": "Für diesen Sensor gibt es schon ein Thermostat.",
+      "reconfigure_successful": "Gespeichert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "IR-Heizung konfigurieren",
+        "menu_options": {
+          "temperatures": "Temperaturen",
+          "comfort": "Komfort und manuelle Zeiten",
+          "pv_boost": "PV-Boost",
+          "season": "Heizgrenze (Saison)",
+          "controller": "Regler und Schaltzeiten"
+        }
+      },
+      "temperatures": {
+        "title": "Temperaturen",
+        "data": {
+          "eco_temp": "Eco (Grundtemperatur)",
+          "comfort_temp": "Komfort",
+          "boost_temp": "PV-Boost",
+          "min_temp": "Kleinster einstellbarer Wert",
+          "max_temp": "Größter einstellbarer Wert"
+        },
+        "data_description": {
+          "eco_temp": "Gilt immer, wenn nichts anderes aktiv ist. Unter 16 °C droht im Dachgeschoss Kondensat.",
+          "boost_temp": "Darauf wird geheizt, solange PV-Überschuss da ist."
+        }
+      },
+      "comfort": {
+        "title": "Komfort und manuelle Zeiten",
+        "data": {
+          "override_minutes": "Dauer",
+          "latest_end": "Spätestes Ende"
+        },
+        "data_description": {
+          "override_minutes": "So lange gilt Komfort oder eine von Hand gesetzte Temperatur, danach übernimmt wieder die Automatik.",
+          "latest_end": "Endet spätestens um diese Uhrzeit, falls sie am selben Tag noch kommt. Leer lassen für kein festes Ende."
+        }
+      },
+      "pv_boost": {
+        "title": "PV-Boost",
+        "description": "Heizt mit Überschuss, der sonst ins Netz ginge. Das Auto hat Vorrang: Lädt es, gibt es keinen Boost. Vorzeichen wie bei evcc: Netz positiv = Bezug, Akku positiv = Entladung.",
+        "data": {
+          "boost_enabled": "PV-Boost aktiv",
+          "grid_power_sensor": "Netzleistung",
+          "battery_power_sensor": "Akkuleistung (optional)",
+          "car_charging_sensor": "Auto lädt (optional)",
+          "boost_start_export": "Start ab Einspeisung",
+          "boost_start_minutes": "Einspeisung mindestens",
+          "boost_stop_import": "Ende ab Bezug aus Netz und Akku",
+          "boost_stop_minutes": "Bezug mindestens"
+        }
+      },
+      "season": {
+        "title": "Heizgrenze",
+        "description": "Liegt das Mittel der Außentemperatur (gleitend über etwa 24 h) über der Heizgrenze, hält das Thermostat keine Eco-Temperatur und es gibt keinen PV-Boost. Komfort per Knopf geht weiterhin.",
+        "data": {
+          "outdoor_sensor": "Außentemperatur (optional)",
+          "heating_limit": "Heizgrenze"
+        }
+      },
+      "controller": {
+        "title": "Regler und Schaltzeiten",
+        "data": {
+          "kp": "Kp (Prozent pro Kelvin)",
+          "ki": "Ki (Prozent pro Kelvin und Sekunde)",
+          "kd": "Kd (Prozent pro Kelvin/Sekunde)",
+          "pwm_minutes": "Taktzeit",
+          "min_on_minutes": "Mindestlaufzeit",
+          "min_off_minutes": "Mindestpause",
+          "refresh_minutes": "Einschaltbefehl wiederholen alle",
+          "stale_minutes": "Sensor gilt als ausgefallen nach"
+        },
+        "data_description": {
+          "kp": "60 heißt: 1 K unter Soll ergibt 60 % Heizleistung.",
+          "refresh_minutes": "0 = nie. Mit einem Auto-Aus-Timer am Schalter sorgt das dafür, dass die Heizung nur ausgeht, wenn Home Assistant ausfällt."
+        }
+      }
+    },
+    "error": {
+      "min_above_max": "Der kleinste Wert muss unter dem größten liegen.",
+      "target_out_of_range": "Eco, Komfort und Boost müssen zwischen kleinstem und größtem Wert liegen.",
+      "boost_needs_grid": "Für den PV-Boost wird der Netzleistungs-Sensor gebraucht."
+    }
+  },
+  "entity": {
+    "climate": {
+      "thermostat": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "automatik": "Automatik",
+              "komfort": "Komfort",
+              "manuell": "Manuell"
+            }
+          }
+        }
+      }
+    },
+    "sensor": {
+      "betriebsart": {
+        "name": "Betriebsart",
+        "state": {
+          "aus": "Aus",
+          "sensorfehler": "Sensorfehler",
+          "sommerpause": "Sommerpause",
+          "eco": "Eco",
+          "komfort": "Komfort",
+          "manuell": "Manuell",
+          "pv_boost": "PV-Boost"
+        }
+      },
+      "stellwert": {
+        "name": "Stellwert"
+      },
+      "aussen_mittel": {
+        "name": "Außentemperatur Mittel"
+      }
+    },
+    "binary_sensor": {
+      "pv_boost": {
+        "name": "PV-Boost"
+      }
+    },
+    "button": {
+      "komfort_starten": {
+        "name": "Komfort starten"
+      },
+      "komfort_beenden": {
+        "name": "Zurück auf Automatik"
+      }
+    }
+  }
+}

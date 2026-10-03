@@ -1,0 +1,164 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up IR heating",
+        "description": "A thermostat for one or more switched heaters in one room. Temperatures, PV boost, season and controller settings follow under Configure.",
+        "data": {
+          "name": "Name",
+          "heaters": "Heaters (switches)",
+          "temperature_sensor": "Room temperature sensor"
+        },
+        "data_description": {
+          "heaters": "All selected switches are cycled together.",
+          "temperature_sensor": "Keep it out of the panels' radiation and out of the sun."
+        }
+      },
+      "reconfigure": {
+        "title": "Change heaters and sensor",
+        "data": {
+          "heaters": "Heaters (switches)",
+          "temperature_sensor": "Room temperature sensor"
+        }
+      }
+    },
+    "error": {
+      "no_heaters": "Select at least one heater."
+    },
+    "abort": {
+      "already_configured": "This sensor already has a thermostat.",
+      "reconfigure_successful": "Saved."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure IR heating",
+        "menu_options": {
+          "temperatures": "Temperatures",
+          "comfort": "Comfort and manual periods",
+          "pv_boost": "PV boost",
+          "season": "Heating limit (season)",
+          "controller": "Controller and switching times"
+        }
+      },
+      "temperatures": {
+        "title": "Temperatures",
+        "data": {
+          "eco_temp": "Eco (base temperature)",
+          "comfort_temp": "Comfort",
+          "boost_temp": "PV boost",
+          "min_temp": "Lowest settable value",
+          "max_temp": "Highest settable value"
+        },
+        "data_description": {
+          "eco_temp": "Applies whenever nothing else is active. Below 16 °C an attic risks condensation.",
+          "boost_temp": "Target while PV surplus lasts."
+        }
+      },
+      "comfort": {
+        "title": "Comfort and manual periods",
+        "data": {
+          "override_minutes": "Duration",
+          "latest_end": "Latest end"
+        },
+        "data_description": {
+          "override_minutes": "How long comfort or a manually set temperature lasts before automatic mode returns.",
+          "latest_end": "Ends at this time at the latest, if it is still ahead today. Leave empty for no fixed end."
+        }
+      },
+      "pv_boost": {
+        "title": "PV boost",
+        "description": "Heats with surplus that would otherwise go to the grid. The car comes first: no boost while it charges. Signs as in evcc: grid positive = import, battery positive = discharge.",
+        "data": {
+          "boost_enabled": "PV boost enabled",
+          "grid_power_sensor": "Grid power",
+          "battery_power_sensor": "Battery power (optional)",
+          "car_charging_sensor": "Car charging (optional)",
+          "boost_start_export": "Start at export of",
+          "boost_start_minutes": "Export for at least",
+          "boost_stop_import": "Stop at draw from grid and battery of",
+          "boost_stop_minutes": "Draw for at least"
+        }
+      },
+      "season": {
+        "title": "Heating limit",
+        "description": "When the outdoor average (moving, about 24 h) is above the limit, the thermostat holds no eco temperature and there is no PV boost. Comfort by button still works.",
+        "data": {
+          "outdoor_sensor": "Outdoor temperature (optional)",
+          "heating_limit": "Heating limit"
+        }
+      },
+      "controller": {
+        "title": "Controller and switching times",
+        "data": {
+          "kp": "Kp (percent per kelvin)",
+          "ki": "Ki (percent per kelvin and second)",
+          "kd": "Kd (percent per kelvin/second)",
+          "pwm_minutes": "Cycle time",
+          "min_on_minutes": "Minimum on time",
+          "min_off_minutes": "Minimum off time",
+          "refresh_minutes": "Repeat the on command every",
+          "stale_minutes": "Sensor counts as failed after"
+        },
+        "data_description": {
+          "kp": "60 means: 1 K below target gives 60 % heating power.",
+          "refresh_minutes": "0 = never. With an auto-off timer on the switch, the heater then only goes off when Home Assistant fails."
+        }
+      }
+    },
+    "error": {
+      "min_above_max": "The lowest value must be below the highest.",
+      "target_out_of_range": "Eco, comfort and boost must lie between the lowest and highest value.",
+      "boost_needs_grid": "PV boost needs the grid power sensor."
+    }
+  },
+  "entity": {
+    "climate": {
+      "thermostat": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "automatik": "Automatic",
+              "komfort": "Comfort",
+              "manuell": "Manual"
+            }
+          }
+        }
+      }
+    },
+    "sensor": {
+      "betriebsart": {
+        "name": "Mode",
+        "state": {
+          "aus": "Off",
+          "sensorfehler": "Sensor fault",
+          "sommerpause": "Summer pause",
+          "eco": "Eco",
+          "komfort": "Comfort",
+          "manuell": "Manual",
+          "pv_boost": "PV boost"
+        }
+      },
+      "stellwert": {
+        "name": "Output"
+      },
+      "aussen_mittel": {
+        "name": "Outdoor average"
+      }
+    },
+    "binary_sensor": {
+      "pv_boost": {
+        "name": "PV boost"
+      }
+    },
+    "button": {
+      "komfort_starten": {
+        "name": "Start comfort"
+      },
+      "komfort_beenden": {
+        "name": "Back to automatic"
+      }
+    }
+  }
+}

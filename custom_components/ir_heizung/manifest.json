@@ -1,0 +1,13 @@
+{
+  "domain": "ir_heizung",
+  "name": "IR-Heizung",
+  "codeowners": ["@tatec22"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/tatec22/ha-ir-heizung",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/tatec22/ha-ir-heizung/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
